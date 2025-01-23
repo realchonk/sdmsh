@@ -68,7 +68,7 @@ clean: lib/clean
 
 ## Delete even more things
 distclean: clean
-	rm -f cscope.out tags
+	rm -f cscope.out tags make/mk
 
 sdmsh: ${OBJ} lib/libsdm/libsdm.a lib/libstream/libstream.a
 	${CC} -o $@ ${OBJ} ${CFLAGS} ${LDFLAGS}
