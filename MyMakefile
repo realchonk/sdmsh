@@ -1,5 +1,7 @@
 .include lib
 
+PROJ = sdmsh
+
 ## Path to the AR program
 AR ?= ar
 
@@ -24,8 +26,6 @@ BUILD_STATIC_BIN ?= 0
 ## Build ${PROJ} with address sanitizers enabled
 WITH_ADDRESS_SANITIZE ?= 0
 
-
-PROJ = sdmsh
 SRC = sdmsh.c sdmsh_commands.c shell.c shell_history.c shell_completion.c shell_help.c
 OBJ = ${SRC:.c=.o}
 OS != uname
@@ -80,8 +80,10 @@ sdmsh: ${OBJ} lib/libsdm/libsdm.a lib/libstream/libstream.a
 .template lib
 OBJ = ${SRC:.c=.o}
 
+## Build both the static and shared library for ${PROJ}
 all: ${PROJ}.a ${PROJ}.so
 
+## Remove all build artifacts for ${PROJ}
 clean:
 	rm -f ${PROJ}.a ${PROJ}.so *.o
 
@@ -89,9 +91,11 @@ clean:
 clean: clean-extra
 .endif
 
+## Build ${PROJ}'s static library
 ${PROJ}.a: ${OBJ}
 	${AR} rcs $@ ${OBJ}
 
+## Build ${PROJ}'s shared library
 ${PROJ}.so: ${OBJ}
 	${CC} -shared -o $@ ${OBJ} ${CFLAGS}
 .endt

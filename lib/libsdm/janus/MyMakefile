@@ -1,4 +1,6 @@
+## Build janus
 all: janus.o
 
+## Clean janus
 clean:
 	rm -f janus.o
