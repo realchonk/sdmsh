@@ -67,6 +67,7 @@ CFLAGS	+= -DCOMPAT_READLINE6
 LDFLAGS += -lncurses ${RLLIB}
 LDFLAGS += -Llib/libsdm -lsdm
 LDFLAGS += -Llib/libstream -lstream
+LDFLAGS += -lm
 
 .if "${BUILD_STATIC_BIN}"
 LDFLAGS += -static
