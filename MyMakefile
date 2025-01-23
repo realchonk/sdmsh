@@ -26,6 +26,9 @@ BUILD_STATIC_BIN ?= 0
 ## Build ${PROJ} with address sanitizers enabled
 WITH_ADDRESS_SANITIZE ?= 0
 
+## Installation prefix
+PREFIX ?= /usr/local
+
 SRC = sdmsh.c sdmsh_commands.c shell.c shell_history.c shell_completion.c shell_help.c
 OBJ = ${SRC:.c=.o}
 OS != uname
@@ -66,6 +69,11 @@ all: ${PROJ}
 clean: lib/clean
 	rm -f ${PROJ} *.o *.so *.core
 
+## Install sdmsh and shared libraries
+install: sdmsh lib/install
+	mkdir -p ${DESTDIR}${PREFIX}/bin
+	cp -f sdmsh ${DESTDIR}${PREFIX}/bin/
+
 ## Delete even more things
 distclean: clean
 	rm -f cscope.out tags make/mk
@@ -91,6 +99,11 @@ clean:
 clean: clean-extra
 .endif
 
+## Install ${PROJ}.so into ${DESTDIR}${PREFIX}/lib/
+install: ${PROJ}.so
+	mkdir -p ${DESTDIR}${PREFIX}/lib
+	cp -f ${PROJ}.so ${DESTDIR}${PREFIX}/lib/
+
 ## Build ${PROJ}'s static library
 ${PROJ}.a: ${OBJ}
 	${AR} rcs $@ ${OBJ}
@@ -104,3 +117,4 @@ ${PROJ}.so: ${OBJ}
 .export CC
 .export CFLAGS
 .export LDFLAGS
+.export PREFIX

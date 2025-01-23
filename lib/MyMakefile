@@ -1,11 +1,15 @@
 .include libsdm
 .include libstream
 
+# workaround for parser bug in mymake
+CLEAN = ${.SUBDIRS:=/clean}
+INSTALL = ${.SUBDIRS:=/install}
+
 ## Build libraries: ${.SUBDIRS}
 all: ${.SUBDIRS}
 
-# workaround for parser bug in mymake
-CLEAN = ${.SUBDIRS:=/clean}
-
 ## Clean libraries: ${.SUBDIRS}
 clean: ${CLEAN}
+
+## Install libraries: ${.SUBDIRS}
+install : ${INSTALL}
