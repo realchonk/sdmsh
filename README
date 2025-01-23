@@ -1,5 +1,11 @@
 This is a version of SDM Shell using my own make(1) successor build system.
 
+The version of make included in this project
+originates from my 2.86BSD project, which can be found here:
+
+  https://got.stuerz.xyz/?action=summary&path=286bsd.git
+
+
 === Build Instructions
   $ ./bootstrap
   $ . ./.env
