@@ -1,5 +1,4 @@
-.include lib
-.include compat
+.SUBDIRS: lib compat
 
 PROJ = sdmsh
 
@@ -12,8 +11,18 @@ CC ?= cc
 ## Default C Compiler Flags
 CFLAGS ?= -std=gnu99 -O2 -Wall -Wextra
 
+## Default C Preprocessor Flags
+CPPFLAGS ?= -D_GNU_SOURCE -D_BSD_SOURCE -DLOGGER_ENABLED
+CPPFLAGS += -I$. -I$./lib/libsdm -I$./lib/libstream
+
 ## Default Linker Flags
 LDFLAGS ?=
+
+## Installation prefix
+PREFIX ?= /usr/local
+
+# export the current value of these variables into subdirectories
+.EXPORTS: AR CC CFLAGS CPPFLAGS LDFLAGS PREFIX
 
 ## Enable compatibility with readline version 6
 COMPAT_READLINE6 ?= 0
@@ -26,9 +35,6 @@ BUILD_STATIC_BIN ?= 0
 # also read https://github.com/google/sanitizers/wiki/AddressSanitizerFlags#run-time-flags
 ## Build ${PROJ} with address sanitizers enabled
 WITH_ADDRESS_SANITIZE ?= 0
-
-## Installation prefix
-PREFIX ?= /usr/local
 
 SRC = sdmsh.c sdmsh_commands.c shell.c shell_history.c shell_completion.c shell_help.c
 OBJ = ${SRC:.c=.o}
@@ -52,7 +58,7 @@ RLINC ?= ${XRLINC}
 ## LDFLAGS for readline
 RLLIB ?= ${XRLLIB}
 
-CFLAGS += -I$. -I$./lib/libsdm -I$./lib/libstream -ggdb -DLOGGER_ENABLED -D_GNU_SOURCE -fPIC ${RLINC}
+CFLAGS += -ggdb -fPIC ${RLINC}
 
 .if "${WITH_ADDRESS_SANITIZE}" && "${OS}" != "OpenBSD"
 CFLAGS	+= -fsanitize=address
@@ -92,13 +98,13 @@ distclean: clean
 	rm -f cscope.out tags make/mk
 
 sdmsh: ${OBJ} lib/libsdm/libsdm.a lib/libstream/libstream.a
-	${CC} -o $@ ${OBJ} ${CFLAGS} ${LDFLAGS}
+	${CC} -o $@ ${OBJ} ${CFLAGS} ${CPPFLAGS} ${LDFLAGS}
 
 sampleconv: sampleconv.c
-	${CC} -o $@ $< ${CFLAGS}
+	${CC} -o $@ $< ${CFLAGS} ${CPPFLAGS}
 
 .c.o:
-	${CC} -c -o $@ $< ${CFLAGS}
+	${CC} -c -o $@ $< ${CFLAGS} ${CPPFLAGS}
 
 # Template for library dependencies
 .template lib
@@ -129,8 +135,3 @@ ${PROJ}.so: ${OBJ}
 	${CC} -shared -o $@ ${OBJ} ${CFLAGS}
 .endt
 
-.export AR
-.export CC
-.export CFLAGS
-.export LDFLAGS
-.export PREFIX
