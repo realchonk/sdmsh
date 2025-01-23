@@ -1,3 +1,6 @@
-Shell for SDM mode for EvoLogics S2C Underwater Acoustic Modems
+This is a version of SDM Shell using my own make(1) successor build system.
 
-Documentation online: https://github.com/evologics/sdmsh/wiki
+=== Build Instructions
+  $ ./bootstrap
+  $ . ./.env
+  $ mk -h	# or with -hv to see more targets
