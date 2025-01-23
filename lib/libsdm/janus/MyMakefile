@@ -3,4 +3,4 @@ all: janus.o
 
 ## Clean janus
 clean:
-	rm -f janus.o
+	rm -f ${.OBJDIR}/janus.o
