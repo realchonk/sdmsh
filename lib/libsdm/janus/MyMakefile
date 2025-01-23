@@ -1,0 +1,4 @@
+all: janus.o
+
+clean:
+	rm -f janus.o

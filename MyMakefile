@@ -1,0 +1,102 @@
+.include lib
+
+## Path to the AR program
+AR ?= ar
+
+## Path to the C Compiler
+CC ?= cc
+
+## Default C Compiler Flags
+CFLAGS ?= -O2 -Wall -Wextra
+
+## Default Linker Flags
+LDFLAGS ?=
+
+## Enable compatibility with readline version 6
+COMPAT_READLINE6 ?= 0
+
+## Compile ${PROJ} statically
+BUILD_STATIC_BIN ?= 0
+
+# Comment this if you do not want checking with address sanitize
+# NOTE: you can use shell variable ASAN_OPTIONS=fast_unwind_on_malloc=false before run sdmsh
+# also read https://github.com/google/sanitizers/wiki/AddressSanitizerFlags#run-time-flags
+## Build ${PROJ} with address sanitizers enabled
+WITH_ADDRESS_SANITIZE ?= 0
+
+
+PROJ = sdmsh
+SRC = sdmsh.c sdmsh_commands.c shell.c shell_history.c shell_completion.c shell_help.c
+OBJ = ${SRC:.c=.o}
+OS != uname
+
+.if "${BUILD_STATIC_BIN}"
+STATIC = --static
+.endif
+
+.if "${OS}" == "OpenBSD"
+RLINC = -I/usr/local/include/ereadline -DHAVE_STRING_H
+RLLIB = -L/usr/local/lib -lereadline
+.else
+RLINC != pkg-config --cflags readline
+RLLIB != pkg-config --libs ${STATIC} readline
+.endif
+
+CFLAGS += -I. -I$./lib/libsdm -I$./lib/libstream -ggdb -DLOGGER_ENABLED -fPIC ${RLINC}
+
+.if "${WITH_ADDRESS_SANITIZE}" && "${OS}" != "OpenBSD"
+CFLAGS += -fsanitize=address
+LDFLAGS += -fsanitize=address
+.endif
+
+LDFLAGS += -lncurses ${RLLIB}
+LDFLAGS += -Llib/libsdm -lsdm
+LDFLAGS += -Llib/libstream -lstream
+
+.if "${BUILD_STATIC_BIN}"
+LDFLAGS += -static
+.endif
+
+# Rules
+
+## Build sdmsh
+all: ${PROJ}
+
+## Delete all build artifacts
+clean: lib/clean
+	rm -f ${PROJ} *.o *.so *.core
+
+## Delete even more things
+distclean: clean
+	rm -f cscope.out tags
+
+sdmsh: ${OBJ} lib/libsdm/libsdm.a lib/libstream/libstream.a
+	${CC} -o $@ ${OBJ} ${CFLAGS} ${LDFLAGS}
+
+.c.o:
+	${CC} -c -o $@ $< ${CFLAGS}
+
+# Template for library dependencies
+.template lib
+OBJ = ${SRC:.c=.o}
+
+all: ${PROJ}.a ${PROJ}.so
+
+clean:
+	rm -f ${PROJ}.a ${PROJ}.so *.o
+
+.if target(clean-extra)
+clean: clean-extra
+.endif
+
+${PROJ}.a: ${OBJ}
+	${AR} rcs $@ ${OBJ}
+
+${PROJ}.so: ${OBJ}
+	${CC} -shared -o $@ ${OBJ} ${CFLAGS}
+.endt
+
+.export AR
+.export CC
+.export CFLAGS
+.export LDFLAGS

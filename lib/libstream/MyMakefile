@@ -1,0 +1,4 @@
+PROJ = libstream
+SRC = stream.c stream_raw.c stream_ascii.c stream_tcp.c stream_popen.c
+
+.expand lib
