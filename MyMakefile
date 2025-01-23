@@ -79,7 +79,7 @@ all: ${PROJ} convert
 
 ## Delete all build artifacts
 clean: lib/clean compat/clean
-	rm -f ${PROJ} *.o *.so *.core
+	rm -f ${PROJ} convert *.o *.so *.core
 
 ## Install sdmsh and shared libraries
 install: sdmsh lib/install
