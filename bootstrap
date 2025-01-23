@@ -1,0 +1,6 @@
+#!/bin/sh -e
+
+[ -z "${CC}" ] && CC=cc
+CFLAGS='-ansi -w -O2'
+
+${CC} -o mk make/make.c ${CFLAGS}
