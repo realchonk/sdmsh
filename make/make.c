@@ -22,6 +22,10 @@
 #define MAKEFILE "MyMakefile"
 #define SHELL "sh"
 
+#if NEED_REALLOCARRAY
+# define reallocarray(ptr, len, sz) (realloc ((ptr), ((len) * (sz))))
+#endif
+
 static struct macro m_shell = {
 	.next = NULL,
 	.enext = NULL,

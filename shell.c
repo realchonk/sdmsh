@@ -20,6 +20,10 @@ extern int rl_tty_set_echoing (int);
 #include <shell_help.h>
 #include <utils.h>
 
+#if NEED_REALLOCARRAY
+# define reallocarray(ptr, len, sz) (realloc ((ptr), ((len) * (sz))))
+#endif
+
 int shell_run_cmd(struct shell_config *sc, char *shell_input);
 
 /* needed for rb_cb_getline() and such callback function */
