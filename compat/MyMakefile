@@ -1,0 +1,5 @@
+
+all: readline6.o
+
+clean:
+	rm -f readline6.o
