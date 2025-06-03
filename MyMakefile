@@ -1,4 +1,5 @@
 .include lib
+.include compat
 
 PROJ = sdmsh
 
@@ -45,7 +46,7 @@ RLINC != pkg-config --cflags readline
 RLLIB != pkg-config --libs ${STATIC} readline
 .endif
 
-CFLAGS += -I. -I$./lib/libsdm -I$./lib/libstream -ggdb -DLOGGER_ENABLED -fPIC ${RLINC}
+CFLAGS += -I$. -I$./lib/libsdm -I$./lib/libstream -ggdb -DLOGGER_ENABLED -fPIC ${RLINC}
 
 .if "${WITH_ADDRESS_SANITIZE}" && "${OS}" != "OpenBSD"
 CFLAGS	+= -fsanitize=address
@@ -53,7 +54,7 @@ LDFLAGS	+= -fsanitize=address
 .endif
 
 .if "${COMPAT_READLINE6}" == "1"
-SRC	+=  compat/readline6.c
+OBJ	+= compat/readline6.o
 CFLAGS	+= -DCOMPAT_READLINE6
 .endif
 
@@ -71,7 +72,7 @@ LDFLAGS += -static
 all: ${PROJ}
 
 ## Delete all build artifacts
-clean: lib/clean
+clean: lib/clean compat/clean
 	rm -f ${PROJ} *.o *.so *.core
 
 ## Install sdmsh and shared libraries
