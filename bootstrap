@@ -3,4 +3,7 @@
 [ -z "${CC}" ] && CC=cc
 CFLAGS='-ansi -w -O2'
 
-${CC} -o mk make/make.c ${CFLAGS}
+${CC} -o make/mk make/make.c ${CFLAGS}
+
+echo "Please run:"
+echo "$ . ./.env"
