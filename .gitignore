@@ -6,4 +6,4 @@ tags
 .gitignore
 sdmsh
 sampleconv
-mk
+make/mk
