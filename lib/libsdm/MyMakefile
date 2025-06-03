@@ -1,0 +1,8 @@
+.include janus
+
+PROJ = libsdm
+SRC = sdm.c utils.c janus/janus.c
+
+clean-extra: janus/clean
+
+.expand lib

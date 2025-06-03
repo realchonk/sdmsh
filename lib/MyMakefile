@@ -1,0 +1,8 @@
+.include libsdm
+.include libstream
+
+all: ${.SUBDIRS}
+
+# workaround for parser bug in mymake
+CLEAN = ${.SUBDIRS:=/clean}
+clean: ${CLEAN}
