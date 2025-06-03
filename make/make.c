@@ -2046,7 +2046,7 @@ struct scope *sc;
 
 	for (sub = sc->dir->subdirs; sub != NULL; sub = sub->next) {
 		new_prefix = parse_subdir (prefix, sub);
-		help_files (new_prefix, sub);
+		help_files (new_prefix, sub, v);
 		free (new_prefix);
 	}
 
