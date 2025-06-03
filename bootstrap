@@ -1,9 +1,0 @@
-#!/bin/sh -e
-
-[ -z "${CC}" ] && CC=cc
-CFLAGS='-ansi -w -O2'
-
-${CC} -o make/mk make/make.c ${CFLAGS}
-
-echo "Please run:"
-echo "$ . ./.env"
