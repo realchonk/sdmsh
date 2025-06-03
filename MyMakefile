@@ -39,12 +39,18 @@ STATIC = --static
 .endif
 
 .if "${OS}" == "OpenBSD"
-RLINC = -I/usr/local/include/ereadline -DHAVE_STRING_H
-RLLIB = -L/usr/local/lib -lereadline
+XRLINC = -I/usr/local/include/ereadline -DHAVE_STRING_H
+XRLLIB = -L/usr/local/lib -lereadline
 .else
-RLINC != pkg-config --cflags readline
-RLLIB != pkg-config --libs ${STATIC} readline
+XRLINC != pkg-config --cflags readline
+XRLLIB != pkg-config --libs ${STATIC} readline
 .endif
+
+## CFLAGS for readline
+RLINC ?= ${XRLINC}
+
+## LDFLAGS for readline
+RLLIB ?= ${XRLLIB}
 
 CFLAGS += -I$. -I$./lib/libsdm -I$./lib/libstream -ggdb -DLOGGER_ENABLED -fPIC ${RLINC}
 
