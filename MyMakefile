@@ -75,11 +75,11 @@ LDFLAGS += -static
 # Rules
 
 ## Build sdmsh
-all: ${PROJ} convert
+all: ${PROJ} sampleconv
 
 ## Delete all build artifacts
 clean: lib/clean compat/clean
-	rm -f ${PROJ} convert *.o *.so *.core
+	rm -f ${PROJ} sampleconv *.o *.so *.core
 
 ## Install sdmsh and shared libraries
 install: sdmsh lib/install
@@ -93,7 +93,7 @@ distclean: clean
 sdmsh: ${OBJ} lib/libsdm/libsdm.a lib/libstream/libstream.a
 	${CC} -o $@ ${OBJ} ${CFLAGS} ${LDFLAGS}
 
-convert: convert.c
+sampleconv: sampleconv.c
 	${CC} -o $@ $< ${CFLAGS}
 
 .c.o:
