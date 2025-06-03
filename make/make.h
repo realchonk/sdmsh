@@ -20,7 +20,6 @@ struct template {
 
 enum scope_type {
 	SC_DIR,
-	SC_GNU,
 	SC_CUSTOM,
 };
 struct scope {
@@ -29,16 +28,16 @@ struct scope {
 	char *name; /* optional */
 	struct scope *parent; /* optional */
 	char *makefile; /* required */
+	int created;
 	union {
 		struct directory *dir; /* optional */
-		struct gnu *gnu; /* required */
 		struct custom *custom; /* required */
 	};
 };
 
 struct directory {
 	struct scope *subdirs;
-	struct file *files;
+	struct file *fhead, *ftail;
 	struct macro *macros;
 	struct macro *emacros;	/* exported macros */
 	struct inference *infs;
@@ -47,33 +46,32 @@ struct directory {
 	int done;
 };
 
-struct gnu {
-	char *prog;	/* optional (default: "make") */
-};
-
 struct custom {
 	struct file *test, *exec;
 };
 
 struct dep {
-	struct dep *next;
+	struct dep *next, *prev;
 	struct path *path;
+	int obj;
 };
 
 struct file {
-	struct file *next;
+	struct file *next, *prev;
 	char *name;
 	struct rule *rule; /* optional */
-	struct dep *deps, *dtail;
+	struct dep *dhead, *dtail;
+	struct inference *inf; /* optional */
 	struct timespec mtime;
 	char *help; /* optional */
+	int obj, err;
 };
 
 struct inference {
 	struct inference *next;
 	char *from, *to;
 	struct rule *rule;
-	struct dep *deps, *dtail;
+	struct dep *dhead, *dtail;
 };
 
 struct rule {
