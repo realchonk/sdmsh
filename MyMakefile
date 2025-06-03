@@ -9,7 +9,7 @@ AR ?= ar
 CC ?= cc
 
 ## Default C Compiler Flags
-CFLAGS ?= -O2 -Wall -Wextra
+CFLAGS ?= -std=c99 -O2 -Wall -Wextra -D_XOPEN_SOURCE=700
 
 ## Default Linker Flags
 LDFLAGS ?=
