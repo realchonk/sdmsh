@@ -71,8 +71,8 @@ CFLAGS	+= -DCOMPAT_READLINE6
 .endif
 
 LDFLAGS += -lncurses ${RLLIB}
-LDFLAGS += -Llib/libsdm -lsdm
-LDFLAGS += -Llib/libstream -lstream
+LDFLAGS += -L${.OBJDIR}/lib/libsdm -lsdm
+LDFLAGS += -L${.OBJDIR}/lib/libstream -lstream
 LDFLAGS += -lm
 
 .if "${BUILD_STATIC_BIN}"
@@ -86,19 +86,19 @@ all: ${PROJ} sampleconv
 
 ## Delete all build artifacts
 clean: lib/clean compat/clean
-	rm -f ${PROJ} sampleconv *.o *.so *.core
+	rm -f ${.OBJDIR}/${PROJ} ${.OBJDIR}/sampleconv ${.OBJDIR}/*.o ${.OBJDIR}/*.so
 
 ## Install sdmsh and shared libraries
 install: sdmsh lib/install
 	mkdir -p ${DESTDIR}${PREFIX}/bin
-	cp -f sdmsh ${DESTDIR}${PREFIX}/bin/
+	cp -f $< ${DESTDIR}${PREFIX}/bin/
 
 ## Delete even more things
 distclean: clean
 	rm -f cscope.out tags make/mk
 
 sdmsh: ${OBJ} lib/libsdm/libsdm.a lib/libstream/libstream.a
-	${CC} -o $@ ${OBJ} ${CFLAGS} ${CPPFLAGS} ${LDFLAGS}
+	${CC} -o $@ ${OBJ:F} ${CFLAGS} ${CPPFLAGS} ${LDFLAGS}
 
 sampleconv: sampleconv.c
 	${CC} -o $@ $< ${CFLAGS} ${CPPFLAGS}
@@ -115,7 +115,7 @@ all: ${PROJ}.a ${PROJ}.so
 
 ## Remove all build artifacts for ${PROJ}
 clean:
-	rm -f ${PROJ}.a ${PROJ}.so *.o
+	rm -f ${.OBJDIR}/${PROJ}.a ${.OBJDIR}/${PROJ}.so ${.OBJDIR}/*.o
 
 .if target(clean-extra)
 clean: clean-extra
@@ -124,14 +124,14 @@ clean: clean-extra
 ## Install ${PROJ}.so into ${DESTDIR}${PREFIX}/lib/
 install: ${PROJ}.so
 	mkdir -p ${DESTDIR}${PREFIX}/lib
-	cp -f ${PROJ}.so ${DESTDIR}${PREFIX}/lib/
+	cp -f ${.OBJDIR}/${PROJ}.so ${DESTDIR}${PREFIX}/lib/
 
 ## Build ${PROJ}'s static library
 ${PROJ}.a: ${OBJ}
-	${AR} rcs $@ ${OBJ}
+	${AR} rcs $@ ${OBJ:F}
 
 ## Build ${PROJ}'s shared library
 ${PROJ}.so: ${OBJ}
-	${CC} -shared -o $@ ${OBJ} ${CFLAGS}
+	${CC} -shared -o $@ ${OBJ:F} ${CFLAGS}
 .endt
 
