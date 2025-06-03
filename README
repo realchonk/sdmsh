@@ -5,8 +5,8 @@ originates from my 2.86BSD project, which can be found here:
 
   https://got.stuerz.xyz/?action=summary&path=286bsd.git
 
+=== Dependencies
+- bmk: https://github.com/realchonk/bmk
 
 === Build Instructions
-  $ ./bootstrap
-  $ . ./.env
   $ mk -h	# or with -hv to see more targets
