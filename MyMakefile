@@ -75,7 +75,7 @@ LDFLAGS += -static
 # Rules
 
 ## Build sdmsh
-all: ${PROJ}
+all: ${PROJ} convert
 
 ## Delete all build artifacts
 clean: lib/clean compat/clean
@@ -92,6 +92,9 @@ distclean: clean
 
 sdmsh: ${OBJ} lib/libsdm/libsdm.a lib/libstream/libstream.a
 	${CC} -o $@ ${OBJ} ${CFLAGS} ${LDFLAGS}
+
+convert: convert.c
+	${CC} -o $@ $< ${CFLAGS}
 
 .c.o:
 	${CC} -c -o $@ $< ${CFLAGS}
